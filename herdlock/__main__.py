@@ -103,6 +103,17 @@ def write_chart(path, chart_shares):
     plt.close(fig)
 
 
+def _round_floats(x, ndigits=9):
+    """Round floats so summary.json is stable across BLAS/numpy builds (last-ulp noise)."""
+    if isinstance(x, float):
+        return round(x, ndigits)
+    if isinstance(x, dict):
+        return {k: _round_floats(v, ndigits) for k, v in x.items()}
+    if isinstance(x, (list, tuple)):
+        return [_round_floats(v, ndigits) for v in x]
+    return x
+
+
 def main():
     parser = argparse.ArgumentParser(prog="herdlock")
     parser.add_argument("--out", default="results", help="output directory")
@@ -131,7 +142,7 @@ def main():
         seed_robustness=robustness,
     )
     with open(os.path.join(args.out, "summary.json"), "w") as f:
-        json.dump(summary, f, indent=2)
+        json.dump(_round_floats(summary), f, indent=2)
 
     print(f"\nwrote {args.out}/summary.json, {args.out}/*.csv, {args.out}/herding.png")
 

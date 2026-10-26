@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "herdlock"
+version = "0.1.0"
+description = "Seeded, non-LLM simulator of herding/cascade dynamics in count-visible selection panels"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy",
+    "matplotlib",
+]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[tool.setuptools.packages.find]
+include = ["herdlock*"]
